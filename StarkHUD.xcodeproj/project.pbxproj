@@ -506,7 +506,7 @@
 		D0DA00000000000000000A31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Config/StarkSensor.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Config/StarkSensor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -535,7 +535,7 @@
 		D0DA00000000000000000A32 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Config/StarkSensor.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Config/StarkSensor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -582,20 +582,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0DA00000000000000000804 /* Build configuration list for PBXNativeTarget "StarkSensor" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D0DA00000000000000000A31 /* Debug */,
-				D0DA00000000000000000A32 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		D0DA00000000000000000803 /* Build configuration list for PBXProject "StarkHUD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0DA00000000000000000A01 /* Debug */,
 				D0DA00000000000000000A02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D0DA00000000000000000804 /* Build configuration list for PBXNativeTarget "StarkSensor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0DA00000000000000000A31 /* Debug */,
+				D0DA00000000000000000A32 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

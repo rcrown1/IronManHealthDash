@@ -9,6 +9,9 @@ enum HUDScene: Int, CaseIterable {
     case arcCore
     case vitals
     case power
+    case recharge
+    case combatLog
+    case mobility
     case diagnostics
 
     var title: String {
@@ -16,6 +19,9 @@ enum HUDScene: Int, CaseIterable {
         case .arcCore: return "ARC CORE"
         case .vitals: return "VITAL SIGNS"
         case .power: return "POWER SYSTEMS"
+        case .recharge: return "RECHARGE ANALYSIS"
+        case .combatLog: return "COMBAT LOG"
+        case .mobility: return "CHASSIS MOBILITY"
         case .diagnostics: return "FULL DIAGNOSTICS"
         }
     }

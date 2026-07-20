@@ -21,7 +21,25 @@ Scenes auto-cycle every 22 seconds:
    HRV, blood oxygen, respiratory rate, resting HR, and VO₂ max tiles.
 3. **POWER SYSTEMS** — activity rings (Power Draw / Combat Readiness / Upright
    Cycles) with steps, distance, and flights counters.
-4. **FULL DIAGNOSTICS** — all sixteen metrics in a grid with sparklines and a
+4. **RECHARGE ANALYSIS** — last night's sleep, stage by stage: a hypnogram
+   timeline (Awake/REM/Light/Deep), totals and percentages per stage, sleep
+   efficiency, bed/wake times, overnight lowest heart rate and respiratory
+   rate, and a 7-night trend against an 8-hour goal line. Works with any
+   source that writes sleep stages to HealthKit — Oura, Apple Watch, etc. —
+   with overlap-safe merging if multiple sources log the same night.
+5. **COMBAT LOG** — the last 14 days of workouts (from any app that logs to
+   HealthKit) filed as mission entries: running → PURSUIT PROTOCOL, strength →
+   ARMOR CONDITIONING, HIIT → COMBAT SIMULATION, yoga → NEURAL RECALIBRATION…
+   Each row shows duration, distance, average heart rate, and energy with a
+   relative power bar, plus 14-day totals up top.
+6. **CHASSIS MOBILITY** — the iPhone's passive gait lab as servo diagnostics:
+   walking steadiness as a big GYRO STABILITY dial, plus SERVO SYMMETRY
+   (asymmetry), GROUND CONTACT (double support), STRIDE CALIBRATION (step
+   length), ASCENT/DESCENT THRUST (stair speeds), and ENDURANCE RATING
+   (six-minute walk). Every gauge carries a NOMINAL / DRIFT DETECTED / FAULT
+   verdict against healthy ranges. No wearable needed — just the phone in
+   your pocket.
+7. **FULL DIAGNOSTICS** — all sixteen metrics in a grid with sparklines and a
    scanner sweep.
 
 Persistent chrome: Stark Industries header, uplink status badge, live clock,

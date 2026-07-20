@@ -152,6 +152,146 @@ struct MetricSample: Codable, Sendable, Identifiable, Equatable {
     var id: String { kind.rawValue }
 }
 
+// MARK: - Sleep
+
+enum SleepStage: String, Codable, Sendable, CaseIterable {
+    case awake, rem, light, deep
+
+    var displayName: String {
+        switch self {
+        case .awake: return "AWAKE"
+        case .rem: return "REM"
+        case .light: return "LIGHT"
+        case .deep: return "DEEP"
+        }
+    }
+}
+
+struct SleepStageSegment: Codable, Sendable, Identifiable {
+    var stage: SleepStage
+    var start: Date
+    var end: Date
+
+    var id: Double { start.timeIntervalSinceReferenceDate }
+    var hours: Double { end.timeIntervalSince(start) / 3600 }
+}
+
+/// One night of sleep, as assembled from HealthKit stage samples
+/// (Oura, Apple Watch, or any other source that writes sleepAnalysis).
+struct SleepNight: Codable, Sendable {
+    var bedtime: Date
+    var wakeTime: Date
+    /// Actually-asleep hours (awake gaps excluded).
+    var totalHours: Double
+    var stageHours: [SleepStage: Double]
+    var inBedHours: Double
+    /// Asleep ÷ in-bed, 0…1.
+    var efficiency: Double
+    /// Chronological stage timeline for the hypnogram.
+    var segments: [SleepStageSegment]
+    var lowestHeartRate: Double?
+    var averageRespiratoryRate: Double?
+
+    func hours(_ stage: SleepStage) -> Double { stageHours[stage] ?? 0 }
+}
+
+struct SleepReport: Codable, Sendable {
+    var lastNight: SleepNight?
+    /// Total sleep hours for each of the last 7 nights, oldest first
+    /// (0 where no data was recorded).
+    var recentTotals: [Double]
+}
+
+// MARK: - Workouts (Combat Log)
+
+enum WorkoutKind: String, Codable, Sendable, CaseIterable {
+    case running, walking, hiking, cycling, swimming
+    case strength, hiit, yoga, elliptical, rowing, other
+
+    var displayName: String {
+        switch self {
+        case .running: return "RUNNING"
+        case .walking: return "WALKING"
+        case .hiking: return "HIKING"
+        case .cycling: return "CYCLING"
+        case .swimming: return "SWIMMING"
+        case .strength: return "STRENGTH TRAINING"
+        case .hiit: return "HIIT"
+        case .yoga: return "YOGA"
+        case .elliptical: return "ELLIPTICAL"
+        case .rowing: return "ROWING"
+        case .other: return "WORKOUT"
+        }
+    }
+
+    /// Mission designation, as filed in the workshop's combat log.
+    var missionName: String {
+        switch self {
+        case .running: return "PURSUIT PROTOCOL"
+        case .walking: return "RECON PATROL"
+        case .hiking: return "FIELD EXPEDITION"
+        case .cycling: return "GROUND CHASE"
+        case .swimming: return "SUBMERSION OP"
+        case .strength: return "ARMOR CONDITIONING"
+        case .hiit: return "COMBAT SIMULATION"
+        case .yoga: return "NEURAL RECALIBRATION"
+        case .elliptical: return "FLIGHT SIMULATOR"
+        case .rowing: return "HYDRAULIC DRILLS"
+        case .other: return "TRAINING CYCLE"
+        }
+    }
+
+    var symbolName: String {
+        switch self {
+        case .running: return "figure.run"
+        case .walking: return "figure.walk"
+        case .hiking: return "figure.hiking"
+        case .cycling: return "figure.outdoor.cycle"
+        case .swimming: return "figure.pool.swim"
+        case .strength: return "dumbbell.fill"
+        case .hiit: return "bolt.heart.fill"
+        case .yoga: return "figure.mind.and.body"
+        case .elliptical: return "figure.elliptical"
+        case .rowing: return "figure.rower"
+        case .other: return "flame.fill"
+        }
+    }
+}
+
+struct WorkoutEntry: Codable, Sendable, Identifiable {
+    var kind: WorkoutKind
+    var start: Date
+    var minutes: Double
+    var kcal: Double?
+    var km: Double?
+    var avgHeartRate: Double?
+
+    var id: Double { start.timeIntervalSinceReferenceDate }
+}
+
+// MARK: - Mobility (Chassis diagnostics)
+
+/// Gait metrics the iPhone's motion coprocessor collects passively —
+/// no watch or ring required, just the phone in a pocket while walking.
+struct MobilityReport: Codable, Sendable {
+    /// Apple's walking-steadiness composite, percent.
+    var steadiness: Double?
+    /// Walking asymmetry, percent (lower is better).
+    var asymmetry: Double?
+    /// Double-support time, percent of stride (lower is better).
+    var doubleSupport: Double?
+    var stepLengthMeters: Double?
+    var stairAscentSpeed: Double?
+    var stairDescentSpeed: Double?
+    var sixMinuteWalkMeters: Double?
+
+    var hasAnyData: Bool {
+        [steadiness, asymmetry, doubleSupport, stepLengthMeters,
+         stairAscentSpeed, stairDescentSpeed, sixMinuteWalkMeters]
+            .contains { $0 != nil }
+    }
+}
+
 /// One telemetry frame sent from the iPhone to the Apple TV.
 struct TelemetryPayload: Codable, Sendable {
     var samples: [MetricSample]
@@ -159,6 +299,9 @@ struct TelemetryPayload: Codable, Sendable {
     var heartRateSeries: [Double]
     var sourceName: String
     var sentAt: Date
+    var sleep: SleepReport? = nil
+    var workouts: [WorkoutEntry]? = nil
+    var mobility: MobilityReport? = nil
 
     static let encoder: JSONEncoder = {
         let e = JSONEncoder()

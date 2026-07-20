@@ -143,8 +143,19 @@ struct TickerView: View {
         if let o = store.sample(.bloodOxygen) {
             lines.append(String(format: "O₂ SATURATION %.0f%% — LIFE SUPPORT UNNECESSARY", o.value))
         }
-        if let sl = store.sample(.sleepHours) {
+        if let night = store.sleepReport?.lastNight {
+            lines.append(String(format: "LAST RECHARGE: %.1f HRS — EFFICIENCY %.0f%% — DEEP %.1f HRS",
+                                night.totalHours, night.efficiency * 100, night.hours(.deep)))
+        } else if let sl = store.sample(.sleepHours) {
             lines.append(String(format: "LAST RECHARGE CYCLE: %.1f HRS", sl.value))
+        }
+        if let mission = store.workouts.first {
+            let kcalText = mission.kcal.map { String(format: " / %.0f KCAL", $0) } ?? ""
+            lines.append("LAST MISSION: \(mission.kind.missionName) — \(Int(mission.minutes)) MIN\(kcalText)")
+        }
+        if let asymmetry = store.mobility?.asymmetry {
+            lines.append(String(format: "SERVO SYMMETRY DRIFT %.1f%% — %@", asymmetry,
+                                asymmetry <= 5 ? "WITHIN TOLERANCE" : "RECALIBRATION ADVISED"))
         }
         // Interleave flavor between data lines.
         var mixed: [String] = []

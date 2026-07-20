@@ -61,6 +61,9 @@ struct HUDRootView: View {
             case .arcCore: ArcCoreScene()
             case .vitals: VitalsScene()
             case .power: PowerScene()
+            case .recharge: RechargeScene()
+            case .combatLog: CombatLogScene()
+            case .mobility: MobilityScene()
             case .diagnostics: DiagnosticsScene()
             }
         }

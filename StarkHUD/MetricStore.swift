@@ -28,6 +28,26 @@ final class MetricStore {
     private(set) var sourceName: String = "SIMULATION CORE"
     private(set) var lastLiveAt: Date?
 
+    // Kept separately so simulated data is never presented as real data.
+    private var liveSleepReport: SleepReport?
+    private var demoSleepReport: SleepReport?
+    private var liveWorkouts: [WorkoutEntry]?
+    private var demoWorkouts: [WorkoutEntry]?
+    private var liveMobility: MobilityReport?
+    private var demoMobility: MobilityReport?
+
+    var sleepReport: SleepReport? {
+        mode == .live ? liveSleepReport : demoSleepReport
+    }
+
+    var workouts: [WorkoutEntry] {
+        (mode == .live ? liveWorkouts : demoWorkouts) ?? []
+    }
+
+    var mobility: MobilityReport? {
+        mode == .live ? liveMobility : demoMobility
+    }
+
     /// Daily goals used by the power-systems rings.
     let energyGoal: Double = 600
     let exerciseGoal: Double = 30
@@ -47,6 +67,9 @@ final class MetricStore {
     func applyLive(_ payload: TelemetryPayload) {
         lastLiveAt = Date()
         mode = .live
+        if let sleep = payload.sleep { liveSleepReport = sleep }
+        if let workouts = payload.workouts { liveWorkouts = workouts }
+        if let mobility = payload.mobility { liveMobility = mobility }
         apply(payload)
     }
 
@@ -54,6 +77,9 @@ final class MetricStore {
     func applyDemo(_ payload: TelemetryPayload) {
         if let t = lastLiveAt, Date().timeIntervalSince(t) < 30 { return }
         mode = .simulation
+        if let sleep = payload.sleep { demoSleepReport = sleep }
+        if let workouts = payload.workouts { demoWorkouts = workouts }
+        if let mobility = payload.mobility { demoMobility = mobility }
         apply(payload)
     }
 

@@ -26,6 +26,15 @@ final class DemoDataEngine {
     private var flights: Double
     private var walkingSpeed: Double = 4.6
     private var hrSeries: [Double] = []
+    private let demoSleep: SleepReport = DemoDataEngine.makeDemoSleep()
+    private let demoWorkouts: [WorkoutEntry] = DemoDataEngine.makeDemoWorkouts()
+    private let demoMobility = MobilityReport(steadiness: 81,
+                                              asymmetry: 2.7,
+                                              doubleSupport: 27.4,
+                                              stepLengthMeters: 0.74,
+                                              stairAscentSpeed: 0.63,
+                                              stairDescentSpeed: 0.74,
+                                              sixMinuteWalkMeters: 545)
 
     init(store: MetricStore) {
         self.store = store
@@ -123,14 +132,83 @@ final class DemoDataEngine {
                 s(.standHours, standHours),
                 s(.distanceWalkingRunning, steps * 0.00074),
                 s(.flightsClimbed, flights),
-                s(.sleepHours, 7.3),
+                s(.sleepHours, demoSleep.lastNight?.totalHours ?? 7.3),
                 s(.mindfulMinutes, 12),
                 s(.bodyMass, 84.1),
                 s(.walkingSpeed, walkingSpeed),
             ],
             heartRateSeries: hrSeries,
             sourceName: "SIMULATION CORE",
-            sentAt: now
+            sentAt: now,
+            sleep: demoSleep,
+            workouts: demoWorkouts,
+            mobility: demoMobility
         )
+    }
+
+    private static func makeDemoWorkouts() -> [WorkoutEntry] {
+        let today = Calendar.current.startOfDay(for: Date())
+        func entry(_ daysAgo: Int, _ hour: Double, _ kind: WorkoutKind, _ minutes: Double,
+                   _ kcal: Double, _ km: Double?, _ avgHR: Double) -> WorkoutEntry {
+            WorkoutEntry(kind: kind,
+                         start: today.addingTimeInterval(Double(-daysAgo) * 86400 + hour * 3600),
+                         minutes: minutes, kcal: kcal, km: km, avgHeartRate: avgHR)
+        }
+        return [
+            entry(0, 7.5, .strength, 42, 384, nil, 128),
+            entry(1, 18.2, .running, 31, 348, 5.2, 152),
+            entry(2, 7.4, .hiit, 24, 296, nil, 158),
+            entry(3, 12.2, .walking, 48, 212, 3.9, 104),
+            entry(5, 17.8, .cycling, 55, 502, 18.4, 141),
+            entry(6, 8.1, .yoga, 30, 96, nil, 84),
+        ]
+    }
+
+    // MARK: Simulated night
+
+    /// A plausible night built from ~90-minute cycles: deep sleep front-loaded,
+    /// REM stretching out toward morning, brief awakenings in between.
+    private static func makeDemoSleep() -> SleepReport {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        let bedtime = today.addingTimeInterval(-38 * 60) // 23:22 last night
+
+        let pattern: [(SleepStage, Double)] = [
+            (.light, 22), (.deep, 46), (.light, 14), (.rem, 16),
+            (.awake, 3),
+            (.light, 26), (.deep, 38), (.light, 16), (.rem, 24),
+            (.light, 30), (.deep, 20), (.rem, 28),
+            (.awake, 5),
+            (.light, 34), (.rem, 36), (.light, 24),
+        ]
+
+        var segments: [SleepStageSegment] = []
+        var cursor = bedtime
+        for (stage, minutes) in pattern {
+            let end = cursor.addingTimeInterval(minutes * 60)
+            segments.append(SleepStageSegment(stage: stage, start: cursor, end: end))
+            cursor = end
+        }
+        let wakeTime = cursor
+
+        var stageHours: [SleepStage: Double] = [:]
+        for seg in segments {
+            stageHours[seg.stage, default: 0] += seg.hours
+        }
+        let totalHours = segments.filter { $0.stage != .awake }.reduce(0) { $0 + $1.hours }
+        let inBedHours = wakeTime.timeIntervalSince(bedtime) / 3600
+
+        let night = SleepNight(bedtime: bedtime,
+                               wakeTime: wakeTime,
+                               totalHours: totalHours,
+                               stageHours: stageHours,
+                               inBedHours: inBedHours,
+                               efficiency: totalHours / inBedHours,
+                               segments: segments,
+                               lowestHeartRate: 49,
+                               averageRespiratoryRate: 13.4)
+
+        return SleepReport(lastNight: night,
+                           recentTotals: [7.1, 6.4, 7.8, 6.9, 8.2, 7.0, totalHours])
     }
 }
