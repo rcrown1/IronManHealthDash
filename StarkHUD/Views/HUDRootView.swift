@@ -3,13 +3,15 @@
 //  StarkHUD — orchestrates the constantly shifting display.
 //
 //  Scenes auto-cycle every 22 seconds. Siri Remote: swipe left/right to
-//  change scenes manually, play/pause to freeze/resume auto-cycling.
+//  change scenes manually, play/pause to freeze/resume auto-cycling,
+//  swipe up/down to toggle workshop audio.
 //
 
 import SwiftUI
 
 struct HUDRootView: View {
     @Environment(MetricStore.self) private var store
+    @Environment(SoundEngine.self) private var sound
     @State private var scene: HUDScene = .arcCore
     @State private var autoCycle = true
 
@@ -40,7 +42,9 @@ struct HUDRootView: View {
                 changeScene(to: scene.previous)
             case .right:
                 changeScene(to: scene.next)
-            default:
+            case .up, .down:
+                sound.toggleEnabled()
+            @unknown default:
                 break
             }
         }
@@ -50,6 +54,23 @@ struct HUDRootView: View {
         .onReceive(Timer.publish(every: 22, on: .main, in: .common).autoconnect()) { _ in
             if autoCycle {
                 changeScene(to: scene.next)
+            }
+        }
+        .onChange(of: store.mode) { _, newMode in
+            switch newMode {
+            case .live: sound.playUplinkEstablished()
+            case .simulation: sound.playUplinkLost()
+            }
+        }
+        .task {
+            // Arc-pulse thump, paced by the live heart rate while the
+            // reactor is on screen.
+            while !Task.isCancelled {
+                let bpm = max(store.bpm, 40)
+                if scene == .arcCore {
+                    sound.playBeat()
+                }
+                try? await Task.sleep(for: .seconds(60.0 / bpm))
             }
         }
     }
@@ -74,6 +95,7 @@ struct HUDRootView: View {
     }
 
     private func changeScene(to newScene: HUDScene) {
+        sound.playTransition()
         withAnimation(.easeInOut(duration: 1.1)) {
             scene = newScene
         }

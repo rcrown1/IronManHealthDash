@@ -9,6 +9,7 @@ import SwiftUI
 @MainActor
 struct StarkHUDApp: App {
     @State private var store = MetricStore()
+    @State private var sound = SoundEngine()
     @State private var receiver: HUDLinkReceiver?
     @State private var demoEngine: DemoDataEngine?
 
@@ -16,6 +17,7 @@ struct StarkHUDApp: App {
         WindowGroup {
             HUDRootView()
                 .environment(store)
+                .environment(sound)
                 .onAppear {
                     guard receiver == nil else { return }
                     let link = HUDLinkReceiver(store: store)
@@ -25,6 +27,8 @@ struct StarkHUDApp: App {
                     let demo = DemoDataEngine(store: store)
                     demo.start()
                     demoEngine = demo
+
+                    sound.start()
                 }
         }
     }

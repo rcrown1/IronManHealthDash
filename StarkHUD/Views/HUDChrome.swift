@@ -38,6 +38,7 @@ struct HUDHeader: View {
 
             HStack(spacing: 20) {
                 LinkBadge()
+                AudioBadge()
                 TimelineView(.periodic(from: .now, by: 1)) { timeline in
                     Text(timeline.date, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute().second())
                         .font(Theme.hudFont(24))
@@ -78,6 +79,18 @@ struct LinkBadge: View {
     }
 }
 
+/// Workshop-audio state, toggled by swiping up/down on the Siri Remote.
+struct AudioBadge: View {
+    @Environment(SoundEngine.self) private var sound
+
+    var body: some View {
+        Image(systemName: sound.isEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+            .font(.system(size: 20, weight: .medium))
+            .foregroundStyle(sound.isEnabled ? Theme.arc.opacity(0.8) : Theme.arcDim)
+            .shadow(color: sound.isEnabled ? Theme.arc.opacity(0.5) : .clear, radius: 6)
+    }
+}
+
 // MARK: - Corner brackets
 
 struct CornerBrackets: View {
@@ -115,6 +128,7 @@ struct CornerBrackets: View {
 /// readouts with workshop flavor.
 struct TickerView: View {
     @Environment(MetricStore.self) private var store
+    @Environment(SoundEngine.self) private var sound
     @State private var index = 0
 
     private static let flavor = [
@@ -183,6 +197,7 @@ struct TickerView: View {
         .frame(height: 34)
         .clipped()
         .onReceive(Timer.publish(every: 4.5, on: .main, in: .common).autoconnect()) { _ in
+            sound.playTickerBlip()
             withAnimation(.easeInOut(duration: 0.5)) {
                 index += 1
             }

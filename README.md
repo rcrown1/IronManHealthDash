@@ -47,7 +47,24 @@ corner brackets, drifting particles, blueprint grid, scanning bands, and a
 JARVIS-flavored diagnostic ticker that mixes real readouts with workshop chatter.
 
 **Siri Remote:** swipe left/right to change scenes manually; play/pause freezes
-or resumes auto-cycling.
+or resumes auto-cycling; swipe up/down mutes or unmutes workshop audio (the
+speaker icon in the header shows the current state).
+
+### Workshop audio
+
+Every sound is synthesized at launch with AVAudioEngine — no audio assets:
+
+- A low **reactor hum** (55 Hz harmonic stack with a slow swell) sits quietly
+  under everything.
+- A **power-up sweep and chime** plays on boot.
+- Scene changes get a soft **whoosh**; ticker lines get a faint telemetry
+  **blip**.
+- The phone linking up plays a three-note ascending **uplink chirp**;
+  dropping back to simulation plays a descending pair.
+- On the Arc Core scene, a sub-bass **arc-pulse thump** beats in time with
+  the live heart rate.
+
+Audio uses the ambient category, so it won't fight other playback.
 
 ## Metrics
 
