@@ -63,6 +63,13 @@ struct CompanionRootView: View {
                 good: model.authState == .granted
             )
             statusRow(
+                label: "WATCH SENSOR",
+                value: model.watchIsLive
+                    ? "\(Int(model.watchHeartRate ?? 0)) BPM LIVE"
+                    : "OFFLINE",
+                good: model.watchIsLive
+            )
+            statusRow(
                 label: "FRAMES TRANSMITTED",
                 value: "\(model.framesSent)",
                 good: model.framesSent > 0

@@ -9,6 +9,7 @@ Two apps, one project:
 |---|---|---|
 | **StarkHUD** | tvOS 17+ | The workshop display. Receives live telemetry from your iPhone and renders it across four auto-cycling scenes. Falls back to a full simulation when no phone is linked, so the screen is never dark. |
 | **StarkCompanion** | iOS 17+ | The field uplink. Reads HealthKit and streams a telemetry frame to the Apple TV every 10 seconds over the local network (Multipeer Connectivity — no server, no account). |
+| **StarkSensor** | watchOS 10+ | The wrist sensor. Runs a workout session so the Watch samples heart rate continuously (~1/sec) and streams each beat to the iPhone over WatchConnectivity. Embedded in StarkCompanion. |
 
 ## The display
 
@@ -63,6 +64,21 @@ The companion keeps the screen awake while open (Multipeer streaming is a
 foreground affair). If the link drops, the TV waits 30 seconds and hands the
 display back to the simulation engine.
 
+### Apple Watch (accurate live heart rate)
+
+Without the Watch app, heart rate comes from whatever samples the Watch last
+committed to HealthKit — often minutes stale. Stark Sensor fixes that:
+
+1. Xcode installs it automatically alongside StarkCompanion (it's embedded);
+   or run the **StarkSensor** scheme directly on your paired Watch.
+2. Open it on the wrist, tap **START STREAM**, and grant the HealthKit prompt.
+   It runs a workout session (nothing is saved to your workout history), which
+   keeps the optical sensor hot and delivers a reading roughly every second.
+3. Each beat flows Watch → iPhone → Apple TV. The companion pushes heart-rate
+   frames every 2 seconds while the stream is live, so the reactor pulse and
+   the EKG trace on the TV track you beat-to-beat. When the watch stream is
+   quiet for 20 seconds, the phone falls back to HealthKit samples.
+
 ### Notes
 
 - tvOS has no HealthKit — that's why the iPhone is the source of truth.
@@ -74,9 +90,10 @@ display back to the simulation engine.
 ## Layout
 
 ```
-Shared/            Telemetry models + link constants (compiled into both apps)
+Shared/            Telemetry models + link constants (compiled into TV + phone apps)
 StarkHUD/          tvOS app — store, MPC receiver, simulation engine, scenes
-StarkCompanion/    iOS app — HealthKit reader, MPC sender, uplink status UI
+StarkCompanion/    iOS app — HealthKit reader, MPC sender, watch receiver, status UI
+StarkSensor/       watchOS app — workout-session HR streamer (WatchConnectivity)
 Config/            Info.plists and HealthKit entitlements
 ```
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Stark Sensor reads your live heart rate to display it on your Apple TV workshop dashboard.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Stark Sensor runs a workout session to keep the heart-rate sensor active while streaming.</string>
+	<key>WKBackgroundModes</key>
+	<array>
+		<string>workout-processing</string>
+	</array>
+</dict>
+</plist>

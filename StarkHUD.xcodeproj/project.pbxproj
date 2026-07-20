@@ -6,9 +6,38 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D0DA00000000000000000B03 /* StarkSensor.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = D0DA00000000000000000103 /* StarkSensor.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D0DA00000000000000000B01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0DA00000000000000000901 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D0DA00000000000000000503;
+			remoteInfo = StarkSensor;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D0DA00000000000000000B04 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				D0DA00000000000000000B03 /* StarkSensor.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		D0DA00000000000000000101 /* StarkHUD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarkHUD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0DA00000000000000000102 /* StarkCompanion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarkCompanion.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0DA00000000000000000103 /* StarkSensor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarkSensor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -25,6 +54,11 @@
 		D0DA00000000000000000203 /* Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		D0DA00000000000000000204 /* StarkSensor */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = StarkSensor;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +78,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D0DA00000000000000000303 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -52,6 +93,7 @@
 			children = (
 				D0DA00000000000000000201 /* StarkHUD */,
 				D0DA00000000000000000202 /* StarkCompanion */,
+				D0DA00000000000000000204 /* StarkSensor */,
 				D0DA00000000000000000203 /* Shared */,
 				D0DA00000000000000000402 /* Products */,
 			);
@@ -62,6 +104,7 @@
 			children = (
 				D0DA00000000000000000101 /* StarkHUD.app */,
 				D0DA00000000000000000102 /* StarkCompanion.app */,
+				D0DA00000000000000000103 /* StarkSensor.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -99,10 +142,12 @@
 				D0DA00000000000000000602 /* Sources */,
 				D0DA00000000000000000302 /* Frameworks */,
 				D0DA00000000000000000702 /* Resources */,
+				D0DA00000000000000000B04 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D0DA00000000000000000B02 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				D0DA00000000000000000202 /* StarkCompanion */,
@@ -113,6 +158,28 @@
 			);
 			productName = StarkCompanion;
 			productReference = D0DA00000000000000000102 /* StarkCompanion.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D0DA00000000000000000503 /* StarkSensor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D0DA00000000000000000804 /* Build configuration list for PBXNativeTarget "StarkSensor" */;
+			buildPhases = (
+				D0DA00000000000000000603 /* Sources */,
+				D0DA00000000000000000303 /* Frameworks */,
+				D0DA00000000000000000703 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D0DA00000000000000000204 /* StarkSensor */,
+			);
+			name = StarkSensor;
+			packageProductDependencies = (
+			);
+			productName = StarkSensor;
+			productReference = D0DA00000000000000000103 /* StarkSensor.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -129,6 +196,9 @@
 						CreatedOnToolsVersion = 26.2;
 					};
 					D0DA00000000000000000502 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					D0DA00000000000000000503 = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -149,6 +219,7 @@
 			targets = (
 				D0DA00000000000000000501 /* StarkHUD */,
 				D0DA00000000000000000502 /* StarkCompanion */,
+				D0DA00000000000000000503 /* StarkSensor */,
 			);
 		};
 /* End PBXProject section */
@@ -162,6 +233,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D0DA00000000000000000702 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0DA00000000000000000703 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -185,7 +263,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D0DA00000000000000000603 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D0DA00000000000000000B02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D0DA00000000000000000503 /* StarkSensor */;
+			targetProxy = D0DA00000000000000000B01 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		D0DA00000000000000000A01 /* Debug */ = {
@@ -355,7 +448,7 @@
 		D0DA00000000000000000A21 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Config/StarkCompanion.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Config/StarkCompanion.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -365,7 +458,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -384,7 +477,7 @@
 		D0DA00000000000000000A22 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Config/StarkCompanion.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Config/StarkCompanion.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -394,7 +487,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -407,6 +500,64 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D0DA00000000000000000A31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Config/StarkSensor.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/StarkSensor-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stark Sensor";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKApplication = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.rickcrown.starkcompanion;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rickcrown.starkcompanion.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		D0DA00000000000000000A32 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Config/StarkSensor.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/StarkSensor-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stark Sensor";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKApplication = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.rickcrown.starkcompanion;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rickcrown.starkcompanion.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
@@ -427,6 +578,15 @@
 			buildConfigurations = (
 				D0DA00000000000000000A21 /* Debug */,
 				D0DA00000000000000000A22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D0DA00000000000000000804 /* Build configuration list for PBXNativeTarget "StarkSensor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0DA00000000000000000A31 /* Debug */,
+				D0DA00000000000000000A32 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
