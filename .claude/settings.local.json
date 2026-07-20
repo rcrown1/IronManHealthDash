@@ -11,7 +11,9 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(xcodebuild -project StarkHUD.xcodeproj -scheme StarkSensor -configuration Debug -destination 'generic/platform=watchOS Simulator' CODE_SIGNING_ALLOWED=NO build)",
-      "Bash(ls ~/Library/Developer/Xcode/DerivedData/StarkHUD-*/Build/Products/Debug-iphonesimulator/StarkCompanion.app/Watch/ 2>&1; xcodebuild -project StarkHUD.xcodeproj -scheme StarkHUD -configuration Debug -destination 'generic/platform=tvOS Simulator' CODE_SIGNING_ALLOWED=NO build 2>&1 | grep -E \"error:|BUILD\")"
+      "Bash(ls ~/Library/Developer/Xcode/DerivedData/StarkHUD-*/Build/Products/Debug-iphonesimulator/StarkCompanion.app/Watch/ 2>&1; xcodebuild -project StarkHUD.xcodeproj -scheme StarkHUD -configuration Debug -destination 'generic/platform=tvOS Simulator' CODE_SIGNING_ALLOWED=NO build 2>&1 | grep -E \"error:|BUILD\")",
+      "Bash(cp /tmp/front-small.png \"App Icon.imagestack/Front.imagestacklayer/Content.imageset/front-glow.png\")",
+      "Bash(cp /tmp/front-appstore.png \"App Icon - App Store.imagestack/Front.imagestacklayer/Content.imageset/front-glow.png\")"
     ]
   }
 }
