@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Stark Companion reads your health metrics so they can be displayed on your Apple TV workshop dashboard.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Stark Companion uses the local network to stream health telemetry to your Apple TV.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_starkhud-link._tcp</string>
+		<string>_starkhud-link._udp</string>
+	</array>
+</dict>
+</plist>

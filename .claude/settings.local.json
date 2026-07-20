@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/crownr/dev/IronManHealthDash log --oneline)",
+      "Bash(xcodebuild -version)",
+      "Bash(xcrun simctl *)",
+      "Bash(brew --version)",
+      "Bash(xcodebuild -project StarkHUD.xcodeproj -list)",
+      "Bash(xcodebuild -project StarkHUD.xcodeproj -scheme StarkHUD -configuration Debug -destination 'generic/platform=tvOS Simulator' CODE_SIGNING_ALLOWED=NO build)",
+      "Bash(xcodebuild -project StarkHUD.xcodeproj -scheme StarkCompanion -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build)",
+      "Bash(git add *)"
+    ]
+  }
+}
