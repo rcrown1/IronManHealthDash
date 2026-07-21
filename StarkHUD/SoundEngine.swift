@@ -45,7 +45,7 @@ final class SoundEngine {
 
         humBuffer = Self.makeHumLoop(format: format)
         bootBuffer = Self.makeBoot(format: format)
-        whooshBuffer = Self.makeWhoosh(format: format)
+        whooshBuffer = Self.makeSuitLock(format: format)
         uplinkBuffer = Self.makeUplink(format: format)
         offlineBuffer = Self.makeOffline(format: format)
         tickerBuffer = Self.makeTickerBlip(format: format)
@@ -142,36 +142,121 @@ final class SoundEngine {
         }
     }
 
-    /// Power-up: rising sweep, then a two-tone confirmation chime.
+    /// Power-up in three acts: sub rumble builds under a charging sweep
+    /// while capacitor ticks accelerate, then ignition — a sub thump and
+    /// a triumphant chord with a high shimmer.
     private static func makeBoot(format: AVAudioFormat) -> AVAudioPCMBuffer? {
-        render(format: format, duration: 1.8) { t in
-            var s = 0.0
-            if t < 1.0 {
-                let env = sin(.pi * t) * 0.5
-                s += sin(sweepPhase(150, 620, 1.0, t)) * env * 0.6
-                s += sin(sweepPhase(300, 1240, 1.0, t)) * env * 0.2
-            }
-            if t >= 1.0 {
-                let u = t - 1.0
-                let env = exp(-4.5 * u)
-                s += (0.45 * sine(880, u) + 0.30 * sine(1318.5, u)) * env
-            }
-            return s
+        // Charge ticks that speed up as the banks come online. The interval
+        // is floored so the series always reaches the cutoff and terminates.
+        var tickTimes: [Double] = []
+        var tick = 0.25
+        var interval = 0.30
+        while tick < 2.05 {
+            tickTimes.append(tick)
+            interval = max(interval * 0.80, 0.045)
+            tick += interval
         }
-    }
 
-    /// Scene change: airy noise burst with a falling tone underneath.
-    private static func makeWhoosh(format: AVAudioFormat) -> AVAudioPCMBuffer? {
-        var seed: UInt64 = 0x5747_1DEA
+        let sweepDuration = 2.3
+        let ratio = pow(820.0 / 85.0, 1.0 / sweepDuration)
+        let lnRatio = log(ratio)
+        let ignition = 2.35
+
+        var seed: UInt64 = 0xA11C_E5E7
         func noise() -> Double {
             seed = seed &* 6364136223846793005 &+ 1442695040888963407
             return Double(Int64(bitPattern: seed >> 11)) / Double(Int64.max)
         }
-        return render(format: format, duration: 0.55) { t in
-            let env = pow(sin(.pi * t / 0.55), 2.0) * exp(-2.5 * t)
-            let air = noise() * 0.30
-            let tone = sin(sweepPhase(950, 280, 0.55, t)) * 0.35
-            return (air + tone) * env
+
+        return render(format: format, duration: 3.8) { t in
+            var s = 0.0
+
+            // Act 1: sub rumble fading in underneath everything.
+            if t < ignition {
+                let build = min(t / 1.6, 1.0)
+                s += sin(2 * .pi * 42 * t) * 0.20 * build
+                s += noise() * 0.05 * build
+            }
+
+            // Act 2: exponential charging whine with a harmonic above it.
+            if t < sweepDuration {
+                let phase = 2 * .pi * 85.0 * (pow(ratio, t) - 1) / lnRatio
+                let fadeIn = min(t / 0.5, 1.0)
+                let fadeOut = t < 2.05 ? 1.0 : max(0, (sweepDuration - t) / 0.25)
+                let env = fadeIn * fadeOut
+                s += sin(phase) * 0.28 * env
+                s += sin(phase * 2) * 0.11 * env
+            }
+
+            // Accelerating capacitor ticks.
+            for tickTime in tickTimes where t >= tickTime && t < tickTime + 0.05 {
+                let u = t - tickTime
+                s += sin(2 * .pi * 1150 * u) * exp(-160 * u) * 0.28
+            }
+
+            // Act 3: ignition — sub thump, chord, shimmer.
+            if t >= ignition {
+                let u = t - ignition
+                s += sin(sweepPhase(95, 44, 0.3, min(u, 0.3))) * exp(-9 * u) * 0.45
+                let chord = 0.26 * sine(880, u)
+                          + 0.20 * sine(1108.7, u)
+                          + 0.16 * sine(1318.5, u)
+                s += chord * exp(-2.4 * u)
+                s += sine(2637, u) * exp(-4 * u) * 0.06
+            }
+            return s * 0.9
+        }
+    }
+
+    /// Scene change: a heavy metal door sliding shut. Rolling rumble and
+    /// metal-on-metal scrape while it moves, a big stop-clunk when it
+    /// hits the frame, and one low bolt-latch to seal it.
+    private static func makeSuitLock(format: AVAudioFormat) -> AVAudioPCMBuffer? {
+        var seed: UInt64 = 0x5117_10CC
+        func noise() -> Double {
+            seed = seed &* 6364136223846793005 &+ 1442695040888963407
+            return Double(Int64(bitPattern: seed >> 11)) / Double(Int64.max)
+        }
+
+        let slideEnd = 0.58
+        let latchAt = 0.80
+        var lowState = 0.0   // one-pole filter memory; render runs sequentially
+
+        return render(format: format, duration: 1.1) { t in
+            var s = 0.0
+            let n = noise()
+            lowState += 0.045 * (n - lowState)
+
+            // The door in motion: low rolling mass + scrape residue,
+            // ramping in fast and decelerating into the frame.
+            if t < slideEnd {
+                let ramp = min(t / 0.07, 1.0)
+                let decel = t < 0.44 ? 1.0 : max(0, (slideEnd - t) / 0.14)
+                // Roller flutter — the door jitters as it travels.
+                let flutter = 0.72 + 0.18 * sin(2 * .pi * 23 * t) + 0.10 * sin(2 * .pi * 37 * t)
+                let env = ramp * decel * flutter
+                s += lowState * 1.5 * env                       // rolling rumble
+                s += (n - lowState) * 0.055 * env               // metal scrape
+                s += sine(46, t) * 0.10 * env                   // sheer mass
+            }
+
+            // The door hits the frame: deep clunk with damped body modes.
+            if t >= slideEnd {
+                let u = t - slideEnd
+                if u < 0.007 { s += n * 0.6 }
+                s += sine(64, u) * exp(-22 * u) * 0.55
+                s += sine(255, u) * exp(-30 * u) * 0.20
+                s += sine(492, u) * exp(-38 * u) * 0.11
+            }
+
+            // One low bolt seats to seal it.
+            if t >= latchAt {
+                let u = t - latchAt
+                if u < 0.004 { s += n * 0.35 }
+                s += sine(690, u) * exp(-60 * u) * 0.16
+                s += sine(1130, u) * exp(-80 * u) * 0.07
+            }
+            return s
         }
     }
 
